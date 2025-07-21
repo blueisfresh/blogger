@@ -15,8 +15,6 @@ import java.util.Set;
 @Data
 @Getter
 @Setter
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-//@ToString(exclude = {"blogs"})
 @Table(name = "tbl_tags")
 public class Tag {
     @Id
@@ -34,7 +32,5 @@ public class Tag {
     // 'mappedBy' indicates that the Blog entity owns the relationship via its 'tags' field
     @ManyToMany(mappedBy = "tags")
 
-//    @EqualsAndHashCode.Exclude // Exclude from equals/hashCode
-//    @ToString.Exclude // Exclude from toString
     private Set<Blog> blogs = new HashSet<>();
 }

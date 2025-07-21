@@ -18,9 +18,6 @@ import java.util.Set;
 @Data
 @Getter
 @Setter
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Only 'id' is included in equals/hashCode
-//@ToString(exclude = {"tags"})
-// Exclude 'tags' from toString to prevent LazyInitializationException and cycles
 @Table(name = "tbl_blogs")
 public class Blog {
     @Id
@@ -52,8 +49,6 @@ public class Blog {
     )
     @Size(min = 1, message = "A blog must have at least one tag")
 
-//    @EqualsAndHashCode.Exclude // Exclude from equals/hashCode
-//    @ToString.Exclude // Exclude from toString
     private Set<Tag> tags = new HashSet<>();
 
 
@@ -66,13 +61,3 @@ public class Blog {
     private Instant updatedAt;
 
 }
-//
-//{
-//        "id":1,
-//        "title":"My First Blog Post",
-//        "content":"This is the content of my first blog post.",
-//        "category":"Technology",
-//        "tags":["Tech","Programming"],
-//        "createdAt":"2021-09-01T12:00:00Z",
-//        "updatedAt":"2021-09-01T12:00:00Z"
-//        }
