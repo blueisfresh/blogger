@@ -1,3 +1,2 @@
-- Blog Endpoints create
 - Dto for Tag
 - Bind Dtos everywhere correct

@@ -20,7 +20,6 @@ public class Tag {
     @EqualsAndHashCode.Include
     private Long id;
 
-
     @NotBlank(message = "Name cannot be blank")
     @Size(max = 255, message = "Name must not exceed 255 characters")
     @Column(name = "tag_name", nullable = false, length = 255)
