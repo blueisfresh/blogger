@@ -1,5 +1,6 @@
 package com.blueisfresh.blogger.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +40,7 @@ public class Blog {
     private String category;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonManagedReference
     @JoinTable(name = "tbl_blog_tag_mapping", // Name of the join table
             joinColumns = @JoinColumn(name = "blog_id"), // FK column referring to Blog
             inverseJoinColumns = @JoinColumn(name = "tag_id") // FK column referring to Tag

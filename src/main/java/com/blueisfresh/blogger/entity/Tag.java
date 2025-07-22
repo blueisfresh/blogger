@@ -1,5 +1,6 @@
 package com.blueisfresh.blogger.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -27,6 +28,7 @@ public class Tag {
 
     // 'mappedBy' indicates that the Blog entity owns the relationship via its 'tags' field
     @ManyToMany(mappedBy = "tags")
+    @JsonBackReference
     private Set<Blog> blogs = new HashSet<>();
 
     public Tag(String tagName) {

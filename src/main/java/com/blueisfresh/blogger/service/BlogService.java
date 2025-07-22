@@ -1,12 +1,16 @@
 package com.blueisfresh.blogger.service;
 
 import com.blueisfresh.blogger.dto.BlogCreateDto;
+import com.blueisfresh.blogger.dto.BlogResponseDto;
 import com.blueisfresh.blogger.dto.BlogUpdateDto;
+import com.blueisfresh.blogger.dto.TagResponseDto;
 import com.blueisfresh.blogger.entity.Blog;
 import com.blueisfresh.blogger.entity.Tag;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
 import com.blueisfresh.blogger.repository.BlogRepository;
 import com.blueisfresh.blogger.repository.TagRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
@@ -25,8 +30,35 @@ public class BlogService {
     @Autowired
     private TagRepository tagRepository;
 
-    public boolean checkBlogIfExists(Long id) {
-        return blogRepository.existsById(id);
+    @PersistenceContext
+    private EntityManager entityManager;
+
+// --- Helper method to convert Tag entity to TagResponseDto ---
+    private TagResponseDto convertToTagResponseDto(Tag tag) {
+        if (tag == null) {
+            return null;
+        }
+        return new TagResponseDto(tag.getId(), tag.getTagName());
+    }
+
+    // --- Helper method to convert Blog entity to BlogResponseDto ---
+    private BlogResponseDto convertToBlogResponseDto(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+        Set<TagResponseDto> tagDtos = blog.getTags().stream()
+                .map(this::convertToTagResponseDto)
+                .collect(Collectors.toSet());
+
+        return new BlogResponseDto(
+                blog.getId(),
+                blog.getTitle(),
+                blog.getContent(),
+                blog.getCategory(),
+                tagDtos,
+                blog.getCreatedAt(),
+                blog.getUpdatedAt()
+        );
     }
 
     @Transactional // Whole Operation is a single transaction
@@ -58,41 +90,43 @@ public class BlogService {
 
     @Transactional
     public Blog updateBlog(Long id, BlogUpdateDto blogUpdateDto) {
-        Optional<Blog> optionalBlog = blogRepository.findById(id);
+        Blog existingBlog = blogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
 
-        if (optionalBlog.isPresent()) {
-            Blog existingBlog = optionalBlog.get();
+        // Ensure the tags collection is fully loaded before modification
+        existingBlog.getTags().size();
 
-            existingBlog.setTitle(blogUpdateDto.getTitle());
-            existingBlog.setContent(blogUpdateDto.getContent());
-            existingBlog.setCategory(blogUpdateDto.getCategory());
+        // Update scalar fields
+        existingBlog.setTitle(blogUpdateDto.getTitle());
+        existingBlog.setContent(blogUpdateDto.getContent());
+        existingBlog.setCategory(blogUpdateDto.getCategory());
 
-            // Handle tags for update: This replaces existing tags with the new set
-            Set<Tag> newTags = new HashSet<>();
-            if (blogUpdateDto.getTagNames() != null && !blogUpdateDto.getTagNames().isEmpty()) {
-                for (String tagName : blogUpdateDto.getTagNames()) {
-                    Tag tag = tagRepository.findByTagName(tagName)
-                            .orElseGet(() -> tagRepository.save(new Tag(tagName)));
-                    newTags.add(tag);
-                }
+        existingBlog.getTags().clear(); // Clears associations in join table
+
+        if (blogUpdateDto.getTagNames() != null && !blogUpdateDto.getTagNames().isEmpty()) {
+            for (String tagName : blogUpdateDto.getTagNames()) {
+                Tag tag = tagRepository.findByTagName(tagName)
+                        .orElseGet(() -> tagRepository.save(new Tag(tagName))); // Find or create
+                existingBlog.getTags().add(tag); // Add to the managed collection
             }
-            existingBlog.setTags(newTags); // This will manage the join table
-
-            // Update timestamp
-            existingBlog.setUpdatedAt(Instant.now());
-
-            return blogRepository.save(existingBlog);
-        } else {
-            throw new ResourceNotFoundException("Blog with ID " + id + " not found.");
         }
+
+        existingBlog.setUpdatedAt(Instant.now());
+
+        return blogRepository.save(existingBlog);
     }
 
-    public List<Blog> getAllBlogs() {
-        return blogRepository.findAll();
+    @Transactional
+    public List<BlogResponseDto> getAllBlogs() {
+        return blogRepository.findAll().stream()
+                .map(this::convertToBlogResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Blog> getById(Long id) {
-        return blogRepository.findById(id);
+    @Transactional
+    public Optional<BlogResponseDto> getById(Long id) {
+        return blogRepository.findById(id)
+                .map(this::convertToBlogResponseDto); // Convert if found
     }
 
     @Transactional
