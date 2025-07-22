@@ -1,5 +1,6 @@
 package com.blueisfresh.blogger.controller;
 
+import com.blueisfresh.blogger.dto.BlogCreateDto;
 import com.blueisfresh.blogger.dto.BlogUpdateDto;
 import com.blueisfresh.blogger.entity.Blog;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
@@ -26,13 +27,13 @@ public class BlogController {
 
     @GetMapping
     public ResponseEntity<List<Blog>> getBlogs() {
-        List<Blog> blogs = blogRepository.findAll();
+        List<Blog> blogs = blogService.getAllBlogs();
         return ResponseEntity.ok(blogs);
     }
 
     @PostMapping
-    public ResponseEntity<Blog> saveBlog(@Valid @RequestBody Blog blog) {
-        Blog createdBlog = blogRepository.save((blog));
+    public ResponseEntity<Blog> saveBlog(@Valid @RequestBody BlogCreateDto blog) {
+        Blog createdBlog = blogService.createBlog((blog));
         return new ResponseEntity<>(createdBlog, HttpStatus.CREATED);
     }
 

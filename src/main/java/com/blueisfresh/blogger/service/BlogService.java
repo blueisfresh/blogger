@@ -31,6 +31,7 @@ public class BlogService {
 
     @Transactional // Whole Operation is a single transaction
     public Blog createBlog(BlogCreateDto blogCreateDto) {
+        // Mapping Dto to Entity
         Blog blog = new Blog();
         blog.setTitle(blogCreateDto.getTitle());
         blog.setContent(blogCreateDto.getContent());
@@ -42,7 +43,7 @@ public class BlogService {
             for (String tagName : blogCreateDto.getTagNames()) {
                 Tag tag = tagRepository.findByTagName(tagName)
                         .orElseGet(() -> tagRepository.save(new Tag(tagName))); // Find or create new tag
-                tags.add(tag);
+                tags.add(tag); // Adding fully managed Tag entities with id
             }
         }
         blog.setTags(tags);
@@ -52,7 +53,7 @@ public class BlogService {
         blog.setCreatedAt(now);
         blog.setUpdatedAt(now);
 
-        return blogRepository.save(blog);
+        return blogRepository.save(blog); // JPA automatically knows how to populate the Mapping table since it has both ids
     }
 
     @Transactional
