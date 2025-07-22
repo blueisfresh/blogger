@@ -2,10 +2,8 @@ package com.blueisfresh.blogger.controller;
 
 import com.blueisfresh.blogger.dto.BlogUpdateDto;
 import com.blueisfresh.blogger.entity.Blog;
-import com.blueisfresh.blogger.entity.Tag;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
 import com.blueisfresh.blogger.repository.BlogRepository;
-import com.blueisfresh.blogger.repository.TagRepository;
 import com.blueisfresh.blogger.service.BlogService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
