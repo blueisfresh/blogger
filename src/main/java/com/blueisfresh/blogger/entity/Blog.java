@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.time.Instant;
@@ -16,8 +13,8 @@ import java.util.Set;
 
 @Entity
 @Data
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_blogs")
 public class Blog {
     @Id
@@ -25,7 +22,6 @@ public class Blog {
     @Column(name = "blog_id")
     @EqualsAndHashCode.Include // Include id in Equals/ Hashcode
     private Long id;
-
 
     @NotBlank(message = "Title cannot be blank")
     @Size(max = 255, message = "Title must not exceed 255 characters")
@@ -47,8 +43,6 @@ public class Blog {
             joinColumns = @JoinColumn(name = "blog_id"), // FK column referring to Blog
             inverseJoinColumns = @JoinColumn(name = "tag_id") // FK column referring to Tag
     )
-    @Size(min = 1, message = "A blog must have at least one tag")
-
     private Set<Tag> tags = new HashSet<>();
 
 
@@ -59,5 +53,14 @@ public class Blog {
     @NotNull(message = "Update timestamp cannot be null")
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    // Custom Constructor for DTOs
+    public Blog(String title, String content, String category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.tags = new HashSet<>();
+        // Timestamps will be set by the service
+    }
 
 }

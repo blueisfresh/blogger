@@ -35,7 +35,7 @@ public class TagService {
         if (optionalTag.isPresent()) {
             Tag existingTag = optionalTag.get();
 
-            existingTag.setName(tagDetails.getName());
+            existingTag.setTagName(tagDetails.getTagName());
 
             return tagRepository.save(existingTag);
         } else {
@@ -60,5 +60,4 @@ public class TagService {
             throw new ResourceNotFoundException("Tag with ID " + id + " not found for deletion.");
         }
     }
-
 }
