@@ -1,5 +1,7 @@
 package com.blueisfresh.blogger.service;
 
+import com.blueisfresh.blogger.dto.TagCreateDto;
+import com.blueisfresh.blogger.dto.TagUpdateDto;
 import com.blueisfresh.blogger.entity.Tag;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
 import com.blueisfresh.blogger.repository.TagRepository;
@@ -23,24 +25,24 @@ public class TagService {
     }
 
     @Transactional // Whole Operation is a single transaction
-    public Tag createTag(Tag tag) {
-        return tagRepository.save(tag);
+    public Tag createTag(TagCreateDto tagDto) {
+        // Mapping Dto to Entity
+        Tag tagEntity = new Tag();
+        tagEntity.setTagName(tagDto.getTagName());
+
+        // id will be generated automatically
+        return tagRepository.save(tagEntity);
     }
 
     @Transactional
-    public Tag updateTag(Long id, Tag tagDetails) {
-        // Find if Tag Exists
-        Optional<Tag> optionalTag = tagRepository.findById(id);
+    public Tag updateTag(Long id, TagUpdateDto tagUpdateDtoDetails) {
+        Tag existingTag = tagRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tag with ID " + id + " not found."));
 
-        if (optionalTag.isPresent()) {
-            Tag existingTag = optionalTag.get();
+        // TagUpdateDto has @NotBlank; tagName will never be null or blank here
+        existingTag.setTagName(tagUpdateDtoDetails.getTagName());
 
-            existingTag.setTagName(tagDetails.getTagName());
-
-            return tagRepository.save(existingTag);
-        } else {
-            throw new ResourceNotFoundException("Tag with ID " + id + " not found.");
-        }
+        return tagRepository.save(existingTag);
     }
 
     public List<Tag> getAllTags() {

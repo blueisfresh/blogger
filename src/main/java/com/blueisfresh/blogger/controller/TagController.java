@@ -1,5 +1,7 @@
 package com.blueisfresh.blogger.controller;
 
+import com.blueisfresh.blogger.dto.TagCreateDto;
+import com.blueisfresh.blogger.dto.TagUpdateDto;
 import com.blueisfresh.blogger.entity.Tag;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
 import com.blueisfresh.blogger.service.TagService;
@@ -27,14 +29,14 @@ public class TagController {
     }
 
     @PostMapping
-    public ResponseEntity<Tag> createTag(@Valid @RequestBody Tag tag) {
+    public ResponseEntity<Tag> createTag(@Valid @RequestBody TagCreateDto tag) {
         Tag createdTag = tagService.createTag((tag));
         // 201 successful creation
         return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @Valid @RequestBody Tag tag) {
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @Valid @RequestBody TagUpdateDto tag) {
         Tag updatedTag = tagService.updateTag(id, tag);
         return ResponseEntity.ok(updatedTag);
     }
