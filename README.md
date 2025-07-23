@@ -17,7 +17,7 @@ This API provides endpoints for managing blogs and their associated tags. It dem
 
 **Technologies Used:**
 *   **Java 17**
-*   **Spring Boot 3.x**
+*   **Spring Boot 3.5.3**
     *   Spring Web (RESTful API)
     *   Spring Data JPA (Database access)
     *   Spring Validation (Request body validation)
@@ -43,10 +43,9 @@ Before you begin, ensure you have the following installed:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/YourGitHubUsername/your-repo-name.git
-    cd your-repo-name
+    git clone https://github.com/blueisfresh/blogger.git
+    cd blogger
     ```
-    *(Replace `YourGitHubUsername` and `your-repo-name` with your actual GitHub details.)*
 
 2.  **Build the Project:**
     Open the project in your IDE. Your IDE should automatically detect the Maven project and download dependencies.
@@ -76,31 +75,29 @@ Before you begin, ensure you have the following installed:
 
 Here's a quick overview of the main API endpoints:
 
-| Method | Endpoint      | Description                          | Request Body       | Response Body      |
-| :----- | :------------ | :----------------------------------- | :----------------- | :----------------- |
-| `GET`  | `/api/blog`   | Retrieve a list of all blogs         | None               | `List<BlogResponseDto>` |
-| `GET`  | `/api/blog/{id}` | Retrieve a single blog by ID         | None               | `BlogResponseDto`  |
-| `POST` | `/api/blog`   | Create a new blog                    | `BlogCreateDto`    | `BlogResponseDto`  |
-| `PUT`  | `/api/blog/{id}` | Update an existing blog by ID        | `BlogUpdateDto`    | `BlogResponseDto`  |
-| `DELETE`|`/api/blog/{id}` | Delete a blog by ID                  | None               | No Content (204)   |
+### Blog Endpoints
 
-*(You can expand on `BlogResponseDto`, `BlogCreateDto`, and `BlogUpdateDto` structures here if you want to provide more detail without requiring users to check Swagger UI.)*
+| Method | Endpoint        | Description                         | Request Body          | Response Body           |
+| :----- | :-------------- | :---------------------------------- | :-------------------- | :---------------------- |
+| `GET`  | `/api/blog`     | Retrieve a list of all blogs        | None                  | `List<Blog>`            |
+| `GET`  | `/api/blog/{id}`| Retrieve a single blog by ID        | None                  | `Blog`                  |
+| `POST` | `/api/blog`     | Create a new blog                   | `BlogCreateDto`       | `Blog`                  |
+| `PUT`  | `/api/blog/{id}`| Update an existing blog by ID       | `BlogUpdateDto`       | `Blog`                  |
+| `DELETE`|`/api/blog/{id}`| Delete a blog by ID                 | None                  | No Content (204)        |
+
+### Tag Endpoints
+
+| Method | Endpoint        | Description                         | Request Body          | Response Body           |
+| :----- | :-------------- | :---------------------------------- | :-------------------- | :---------------------- |
+| `GET`  | `/api/tag`      | Retrieve a list of all tags         | None                  | `List<Tag>`             |
+| `GET`  | `/api/tag/{id}` | Retrieve a single tag by ID         | None                  | `Tag`                   |
+| `POST` | `/api/tag`      | Create a new tag                    | `TagCreateDto`        | `Tag`                   |
+| `PUT`  | `/api/tag/{id}` | Update an existing tag by ID        | `TagUpdateDto`        | `Tag`                   |
+| `DELETE`|`/api/tag/{id}` | Delete a tag by ID                  | None                  | No Content (204)        |
 
 ---
 
 ## 🌐 Project Page URL (for submission)
 
 **Your GitHub Repository:**
-[https://github.com/YourGitHubUsername/your-repo-name](https://github.com/YourGitHubUsername/your-repo-name)
-
----
-
-## 🤝 Contributing
-
-Feel free to open issues or submit pull requests if you have suggestions for improvements or find any bugs.
-
----
-
-## License
-
-*(If you have a license, state it here. e.g., MIT License)*
+[https://github.com/blueisfresh/blogger.git](https://github.com/YourGitHubUsername/your-repo-name)
