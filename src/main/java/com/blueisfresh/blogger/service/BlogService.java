@@ -33,34 +33,6 @@ public class BlogService {
     @PersistenceContext
     private EntityManager entityManager;
 
-// --- Helper method to convert Tag entity to TagResponseDto ---
-    private TagResponseDto convertToTagResponseDto(Tag tag) {
-        if (tag == null) {
-            return null;
-        }
-        return new TagResponseDto(tag.getId(), tag.getTagName());
-    }
-
-    // --- Helper method to convert Blog entity to BlogResponseDto ---
-    private BlogResponseDto convertToBlogResponseDto(Blog blog) {
-        if (blog == null) {
-            return null;
-        }
-        Set<TagResponseDto> tagDtos = blog.getTags().stream()
-                .map(this::convertToTagResponseDto)
-                .collect(Collectors.toSet());
-
-        return new BlogResponseDto(
-                blog.getId(),
-                blog.getTitle(),
-                blog.getContent(),
-                blog.getCategory(),
-                tagDtos,
-                blog.getCreatedAt(),
-                blog.getUpdatedAt()
-        );
-    }
-
     @Transactional // Whole Operation is a single transaction
     public Blog createBlog(BlogCreateDto blogCreateDto) {
         // Mapping Dto to Entity
@@ -116,17 +88,14 @@ public class BlogService {
         return blogRepository.save(existingBlog);
     }
 
-    @Transactional
-    public List<BlogResponseDto> getAllBlogs() {
-        return blogRepository.findAll().stream()
-                .map(this::convertToBlogResponseDto)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<Blog> getAllBlogs() {
+        return blogRepository.findAll();
     }
 
     @Transactional
-    public Optional<BlogResponseDto> getById(Long id) {
-        return blogRepository.findById(id)
-                .map(this::convertToBlogResponseDto); // Convert if found
+    public Optional<Blog> getById(Long id) {
+        return blogRepository.findById(id);
     }
 
     @Transactional

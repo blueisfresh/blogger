@@ -27,8 +27,10 @@ public class Tag {
     private String tagName;
 
     // 'mappedBy' indicates that the Blog entity owns the relationship via its 'tags' field
-    @ManyToMany(mappedBy = "tags")
     @JsonBackReference
+    @ManyToMany(mappedBy = "tags")
+    @EqualsAndHashCode.Exclude // SOLVED THE BUG
+    @ToString.Exclude // SOLVED THE BUG
     private Set<Blog> blogs = new HashSet<>();
 
     public Tag(String tagName) {

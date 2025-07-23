@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.processing.Exclude;
 
 
 import java.time.Instant;
@@ -39,11 +40,11 @@ public class Blog {
     @Column(name = "category", nullable = false, length = 50)
     private String category;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonManagedReference
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "tbl_blog_tag_mapping", // Name of the join table
-            joinColumns = @JoinColumn(name = "blog_id"), // FK column referring to Blog
-            inverseJoinColumns = @JoinColumn(name = "tag_id") // FK column referring to Tag
+            joinColumns = @JoinColumn(name = "blog_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
 

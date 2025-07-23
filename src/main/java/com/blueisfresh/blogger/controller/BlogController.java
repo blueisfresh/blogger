@@ -27,33 +27,35 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BlogResponseDto>> getBlogs() {
-        List<BlogResponseDto> blogs = blogService.getAllBlogs();
+    public ResponseEntity<List<Blog>> getBlogs() {
+        // List<Blog> blogs = blogService.getAllBlogs();
+        // return ResponseEntity.ok(blogs);
+        List<Blog> blogs = blogRepository.findAll(); // Get the list of blogs
         return ResponseEntity.ok(blogs);
     }
 
     @PostMapping
-    public ResponseEntity<BlogResponseDto> saveBlog(@Valid @RequestBody BlogCreateDto blog) {
+    public ResponseEntity<Blog> saveBlog(@Valid @RequestBody BlogCreateDto blog) {
         Blog createdBlog = blogService.createBlog((blog));
         return new ResponseEntity<>(blogService.getById(createdBlog.getId()).orElseThrow(), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BlogResponseDto> updateBlog(@PathVariable Long id, @Valid @RequestBody BlogUpdateDto blog) {
+    public ResponseEntity<Blog> updateBlog(@PathVariable Long id, @Valid @RequestBody BlogUpdateDto blog) {
         Blog updatedBlog = blogService.updateBlog(id, blog);
         return ResponseEntity.ok(blogService.getById(updatedBlog.getId()).orElseThrow());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204 HTTP for successful deletion
-    public void deleteBlog(@PathVariable Long id){
+    public void deleteBlog(@PathVariable Long id) {
         blogService.deleteBlog(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BlogResponseDto> getBlogById(@PathVariable Long id) { // Return DTO
-        BlogResponseDto blog = blogService.getById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
-        return ResponseEntity.ok(blog);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Blog> getBlogById(@PathVariable Long id) { // Return DTO
+//        BlogResponseDto blog = blogService.getById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
+//        return ResponseEntity.ok(blog);
+//    }
 }

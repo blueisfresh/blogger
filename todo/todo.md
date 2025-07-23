@@ -1,2 +1,2 @@
-- Dto for Tag
-- Bind Dtos everywhere correct
+- Convert Getters and Posts and Put to return response dtos
+- get blog by id method in controller update
