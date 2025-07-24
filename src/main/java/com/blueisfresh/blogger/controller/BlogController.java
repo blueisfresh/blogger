@@ -1,11 +1,9 @@
 package com.blueisfresh.blogger.controller;
 
 import com.blueisfresh.blogger.dto.BlogCreateDto;
-import com.blueisfresh.blogger.dto.BlogResponseDto;
 import com.blueisfresh.blogger.dto.BlogUpdateDto;
 import com.blueisfresh.blogger.entity.Blog;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
-import com.blueisfresh.blogger.repository.BlogRepository;
 import com.blueisfresh.blogger.service.BlogService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,19 +16,15 @@ import java.util.List;
 @RequestMapping("api/blog")
 public class BlogController {
 
-    private final BlogRepository blogRepository;
     private final BlogService blogService;
 
-    public BlogController(BlogRepository blogRepository, BlogService blogService) {
-        this.blogRepository = blogRepository;
+    public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
 
     @GetMapping
     public ResponseEntity<List<Blog>> getBlogs() {
-        // List<Blog> blogs = blogService.getAllBlogs();
-        // return ResponseEntity.ok(blogs);
-        List<Blog> blogs = blogRepository.findAll(); // Get the list of blogs
+        List<Blog> blogs = blogService.getAllBlogs();
         return ResponseEntity.ok(blogs);
     }
 
@@ -52,10 +46,9 @@ public class BlogController {
         blogService.deleteBlog(id);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Blog> getBlogById(@PathVariable Long id) { // Return DTO
-//        BlogResponseDto blog = blogService.getById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
-//        return ResponseEntity.ok(blog);
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Blog> getBlogById(@PathVariable Long id) {
+        Blog blog = blogService.getById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
+        return ResponseEntity.ok(blog);
+    }
 }

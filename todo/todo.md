@@ -1,2 +1,2 @@
-- Convert Getters and Posts and Put to return response dtos
-- get blog by id method in controller update
+- add search term
+- go through the entire code and change the comments

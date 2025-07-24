@@ -1,9 +1,7 @@
 package com.blueisfresh.blogger.service;
 
 import com.blueisfresh.blogger.dto.BlogCreateDto;
-import com.blueisfresh.blogger.dto.BlogResponseDto;
 import com.blueisfresh.blogger.dto.BlogUpdateDto;
-import com.blueisfresh.blogger.dto.TagResponseDto;
 import com.blueisfresh.blogger.entity.Blog;
 import com.blueisfresh.blogger.entity.Tag;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
