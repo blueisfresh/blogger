@@ -22,7 +22,6 @@ public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "blog_id")
-    @EqualsAndHashCode.Include // Include id in Equals/ Hashcode
     private Long id;
 
     @NotBlank(message = "Title cannot be blank")
@@ -48,7 +47,6 @@ public class Blog {
     )
     private Set<Tag> tags = new HashSet<>();
 
-
     @NotNull(message = "Creation timestamp cannot be null")
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -65,5 +63,4 @@ public class Blog {
         this.tags = new HashSet<>();
         // Timestamps will be set by the service
     }
-
 }

@@ -36,10 +36,10 @@ public class TagService {
 
     @Transactional
     public Tag updateTag(Long id, TagUpdateDto tagUpdateDtoDetails) {
+        // Does Tag exist?
         Tag existingTag = tagRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tag with ID " + id + " not found."));
 
-        // TagUpdateDto has @NotBlank; tagName will never be null or blank here
         existingTag.setTagName(tagUpdateDtoDetails.getTagName());
 
         return tagRepository.save(existingTag);

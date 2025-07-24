@@ -43,14 +43,13 @@ public class TagController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // 204 HTTP for successful deletion
-    public void deleteTag(@PathVariable Long id){
+    public void deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
-        Tag tag = tagService.getById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tag with ID " + id + " not found."));
+        Tag tag = tagService.getById(id).orElseThrow(() -> new ResourceNotFoundException("Tag with ID " + id + " not found."));
         return ResponseEntity.ok(tag);
     }
 }

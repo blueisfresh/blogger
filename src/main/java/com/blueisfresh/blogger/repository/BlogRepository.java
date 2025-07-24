@@ -12,6 +12,7 @@ import java.util.List;
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     // CRUD Automatically created
 
+    // Custom Search Term Method
     @Query("SELECT b FROM Blog b WHERE " +
             "LOWER(b.category) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
             "LOWER(b.content) LIKE LOWER(CONCAT('%', :term, '%')) OR " +

@@ -1,2 +1,0 @@
-- add search term
-- go through the entire code and change the comments

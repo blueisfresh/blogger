@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
     // Crud Operations automatically generated
-
     Optional<Tag> findByTagName(String tagName);
 }

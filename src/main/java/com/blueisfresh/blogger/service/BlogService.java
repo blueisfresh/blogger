@@ -9,17 +9,12 @@ import com.blueisfresh.blogger.repository.BlogRepository;
 import com.blueisfresh.blogger.repository.TagRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
@@ -29,10 +24,7 @@ public class BlogService {
     @Autowired
     private TagRepository tagRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Transactional // Whole Operation is a single transaction
+    @Transactional
     public Blog createBlog(BlogCreateDto blogCreateDto) {
         // Mapping Dto to Entity
         Blog blog = new Blog();
@@ -42,14 +34,17 @@ public class BlogService {
 
         // Handle tags
         Set<Tag> tags = new HashSet<>();
+        // Check that Tags is not empty
         if (blogCreateDto.getTagNames() != null && !blogCreateDto.getTagNames().isEmpty()) {
+            // Map through all the tags
             for (String tagName : blogCreateDto.getTagNames()) {
+                // Does Tag exist IF NOT create new tag
                 Tag tag = tagRepository.findByTagName(tagName)
-                        .orElseGet(() -> tagRepository.save(new Tag(tagName))); // Find or create new tag
-                tags.add(tag); // Adding fully managed Tag entities with id
+                        .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+                tags.add(tag); // Adding fully managed Tag entities with id to Tag table and the mapping table
             }
         }
-        blog.setTags(tags);
+        blog.setTags(tags); // create the new blog
 
         // Set timestamps
         Instant now = Instant.now();
@@ -61,11 +56,9 @@ public class BlogService {
 
     @Transactional
     public Blog updateBlog(Long id, BlogUpdateDto blogUpdateDto) {
+        // Does Blog already exist?
         Blog existingBlog = blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
-
-        // Ensure the tags collection is fully loaded before modification
-        existingBlog.getTags().size();
 
         // Update scalar fields
         existingBlog.setTitle(blogUpdateDto.getTitle());
@@ -74,6 +67,7 @@ public class BlogService {
 
         existingBlog.getTags().clear(); // Clears associations in join table
 
+        // Updates the tag table and resets the mapping table
         if (blogUpdateDto.getTagNames() != null && !blogUpdateDto.getTagNames().isEmpty()) {
             for (String tagName : blogUpdateDto.getTagNames()) {
                 Tag tag = tagRepository.findByTagName(tagName)
@@ -99,14 +93,15 @@ public class BlogService {
 
     @Transactional
     public void deleteBlog(Long id) {
+        // Check if it exists before deleting
         if (blogRepository.existsById(id)) {
             blogRepository.deleteById(id);
         } else {
-            // Throw the custom exception
             throw new ResourceNotFoundException("Blog with ID " + id + " not found for deletion.");
         }
     }
 
+    // Search Term
     public List<Blog> searchBlogs(String searchTerm) {
         return blogRepository.findBlogsBySearchTerm(searchTerm);
     }
