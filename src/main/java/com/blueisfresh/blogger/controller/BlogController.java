@@ -5,9 +5,12 @@ import com.blueisfresh.blogger.dto.BlogUpdateDto;
 import com.blueisfresh.blogger.entity.Blog;
 import com.blueisfresh.blogger.exception.ResourceNotFoundException;
 import com.blueisfresh.blogger.service.BlogService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,4 +54,15 @@ public class BlogController {
         Blog blog = blogService.getById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with ID " + id + " not found."));
         return ResponseEntity.ok(blog);
     }
+
+    @Transactional
+    @GetMapping("/posts")
+    public ResponseEntity<List<Blog>> searchPosts(@RequestParam String searchTerm) {
+        List<Blog> foundBlogs = blogService.searchBlogs(searchTerm);
+        if(!foundBlogs.isEmpty()) {
+            return ResponseEntity.ok(foundBlogs);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    };
 }

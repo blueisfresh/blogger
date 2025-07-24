@@ -9,15 +9,16 @@ import com.blueisfresh.blogger.repository.BlogRepository;
 import com.blueisfresh.blogger.repository.TagRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,4 +106,9 @@ public class BlogService {
             throw new ResourceNotFoundException("Blog with ID " + id + " not found for deletion.");
         }
     }
+
+    public List<Blog> searchBlogs(String searchTerm) {
+        return blogRepository.findBlogsBySearchTerm(searchTerm);
+    }
+
 }
