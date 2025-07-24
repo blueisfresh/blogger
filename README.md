@@ -14,6 +14,7 @@ This API provides endpoints for managing blogs and their associated tags. It dem
 *   Uses DTOs for clear API contracts and separation of concerns.
 *   Data validation using Jakarta Bean Validation.
 *   Database interaction via Spring Data JPA and Hibernate.
+*   Search functionality for blogs.
 
 **Technologies Used:**
 *   **Java 17**
@@ -38,6 +39,13 @@ Before you begin, ensure you have the following installed:
 *   **Java Development Kit (JDK) 17 or higher**
 *   **Apache Maven** (if not using an IDE with built-in Maven support)
 *   A Java IDE like **IntelliJ IDEA**, **Eclipse**, or **VS Code with Java Extensions** (recommended)
+
+### Important Database Note for Local Testing:
+
+For convenience during local development and to ensure repeatable tests with the provided HTTP client (`.http` file), the `src/main/resources/application.properties` file is configured with `spring.jpa.hibernate.ddl-auto=create-drop`. This setting will **automatically drop and recreate the database schema every time the application starts and shuts down**, ensuring a fresh state.
+
+*   **For testing:** This is ideal.
+*   **For production/persistent data:** This setting is **not recommended** as it would erase your data. For production, you would typically set this to `none` or use a schema migration tool like Flyway/Liquibase.
 
 ### Steps
 
